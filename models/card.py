@@ -9,21 +9,17 @@ class Card:
         self.value = value
         self.color = color
 
+    def __repr__(self) -> str:
+        color = ""
 
-CARD_VALUES: list[CardValue] = [
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "JACK",
-    "QUEEN",
-    "KING",
-    "ACE",
-]
+        match self.color:
+            case "Hearts":
+                color = "\U00002764"
+            case "Diamonds":
+                color = "\U000025c6"
+            case "Spades":
+                color = "\U00002660"
+            case "Clubs":
+                color = "\U00002663"
 
-CARD_COLORS: list[CardColor] = ["Hearts", "Spades", "Clubs", "Diamonds"]
+        return f"{self.value} {color}"

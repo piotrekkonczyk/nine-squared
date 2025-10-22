@@ -10,10 +10,10 @@ CARD_VALUES: list[CardValue] = [
     "8",
     "9",
     "10",
-    "JACK",
-    "QUEEN",
-    "KING",
-    "ACE",
+    "J",
+    "Q",
+    "K",
+    "A",
 ]
 
-CARD_COLORS: list[CardColor] = ["Hearts", "Spades", "Clubs", "Diamonds"]
+CARD_COLORS: list[CardColor] = ["Hearts", "Diamonds", "Clubs", "Spades"]
