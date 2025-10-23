@@ -6,11 +6,14 @@ class Deck:
     cards: list[Card]
     deck_controller: DeckController
 
+    cards_on_square: list[Card]
+
     def seed_cards(self) -> None:
         self.cards = self.deck_controller.seed_cards()
 
     def shuffle_cards(self) -> None:
         self.cards = self.deck_controller.shuffle_cards(self.cards)
+        self.cards_on_square = self.cards[0:9]
 
     def __init__(self) -> None:
         self.deck_controller = DeckController()
@@ -19,4 +22,4 @@ class Deck:
         self.shuffle_cards()
 
     def display_cards(self):
-        self.deck_controller.display_cards(self.cards)
+        self.deck_controller.display_cards(self.cards, self.cards_on_square)

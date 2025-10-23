@@ -24,12 +24,23 @@ class DeckController:
 
         return cards
 
-    def display_cards(self, cards: list[Card]) -> None:
+    def display_cards(self, cards: list[Card], cards_on_square: list[Card]) -> None:
         displayed_text = ""
+        square_cards_count = len(cards_on_square)
+
+        print(f"{square_cards_count} cards on the square")
+        print(f"{52 - square_cards_count} left in the deck")
+        print("")
 
         for i in range(9):
             displayed_text += str(cards[i]) + "     "
 
             if i % 3 == 2:
-                print(f"{displayed_text}\n\n")
+                print(f"{displayed_text}")
+
+                if i == 8:
+                    return
+
+                print("\n")
+
                 displayed_text = ""
