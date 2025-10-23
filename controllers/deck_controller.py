@@ -1,5 +1,6 @@
 from constants.cards import CARD_COLORS, CARD_VALUES
 from models.card import Card
+from random import shuffle
 
 
 class DeckController:
@@ -15,5 +16,10 @@ class DeckController:
 
             if i % 13 == 13 - 1:
                 color_idx += 1
+
+        return cards
+
+    def shuffle_cards(self, cards: list[Card]) -> list[Card]:
+        shuffle(cards)
 
         return cards

@@ -10,8 +10,10 @@ class Deck:
         self.cards = self.deck_controller.seed_cards()
 
     def shuffle_cards(self) -> None:
-        pass
+        self.cards = self.deck_controller.shuffle_cards(self.cards)
 
     def __init__(self) -> None:
         self.deck_controller = DeckController()
+
         self.seed_cards()
+        self.shuffle_cards()
