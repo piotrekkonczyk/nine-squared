@@ -23,3 +23,13 @@ class DeckController:
         shuffle(cards)
 
         return cards
+
+    def display_cards(self, cards: list[Card]) -> None:
+        displayed_text = ""
+
+        for i in range(9):
+            displayed_text += str(cards[i]) + "     "
+
+            if i % 3 == 2:
+                print(f"{displayed_text}\n\n")
+                displayed_text = ""

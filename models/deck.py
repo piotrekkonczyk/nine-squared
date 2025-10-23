@@ -17,3 +17,6 @@ class Deck:
 
         self.seed_cards()
         self.shuffle_cards()
+
+    def display_cards(self):
+        self.deck_controller.display_cards(self.cards)
