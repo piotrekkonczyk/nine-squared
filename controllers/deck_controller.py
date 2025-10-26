@@ -8,6 +8,7 @@ from models.deck import Deck
 class DeckController:
     deck: Deck
 
+    # NOTE: Behaves kinda like constructor
     def create_deck(self) -> None:
         self.deck = Deck()
         self.seed_deck()
@@ -22,7 +23,8 @@ class DeckController:
             card = Card(value=CARD_VALUES[value_idx], color=CARD_COLORS[color_idx])
             cards.append(card)
 
-            if i % 13 == 13 - 1:
+            # NOTE: Checks whether the value_index means that the card is ACE, idx 12 means ACE
+            if value_idx == 13 - 1:
                 color_idx += 1
 
         shuffle(cards)
