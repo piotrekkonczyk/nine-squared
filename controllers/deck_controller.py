@@ -1,5 +1,5 @@
 from config.config import Config
-from constants.cards import CARD_COLORS, CARD_VALUES
+from constants.cards import CARD_COLORS, CARD_VALUES, CARD_VALUES_MAP
 from models.card import Card
 from random import shuffle
 
@@ -60,13 +60,13 @@ class DeckController:
 
         # TODO: for now let's assume that the input is always correct
 
-        card_value = guess_elements[0]
+        card_value = CARD_VALUES_MAP[guess_elements[0]]
         key = guess_elements[1]
 
-        top_card_value = self.deck.card_on_top.value
+        top_card_value = CARD_VALUES_MAP[self.deck.card_on_top.value]
 
         for card_on_square in self.deck.cards_on_square:
-            if card_on_square.value == card_value:
+            if CARD_VALUES_MAP[card_on_square.value] == card_value:
                 if top_card_value > card_value and self.config.key_higher == key:
                     print("You won!")
                 elif top_card_value < card_value and self.config.key_lower == key:
