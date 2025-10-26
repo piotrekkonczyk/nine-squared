@@ -1,3 +1,4 @@
+from config.config import Config
 from constants.cards import CARD_COLORS, CARD_VALUES
 from models.card import Card
 from random import shuffle
@@ -7,6 +8,10 @@ from models.deck import Deck
 
 class DeckController:
     deck: Deck
+    config: Config
+
+    def __init__(self, config) -> None:
+        self.config = config
 
     # NOTE: Behaves kinda like constructor
     def create_deck(self) -> None:
