@@ -6,7 +6,8 @@ config = Config()
 deck_controller = DeckController(config=config)
 deck_controller.create_deck()
 
-deck_controller.display_cards()
+while deck_controller.can_play():
+    deck_controller.display_cards()
 
-deck_controller.check_if_value_is_present()
-deck_controller.guess()
+    deck_controller.check_if_value_is_present()
+    deck_controller.guess()

@@ -50,13 +50,13 @@ class DeckController:
         square_cards_count = self.deck.current_card_idx
         cards_left = 52 - square_cards_count
 
-        print(f"{square_cards_count} cards on the square")
+        print(f"\n{square_cards_count} cards on the square")
         print(f"{cards_left} left in the deck\n")
 
-        for i in range(square_cards_count):
-            displayed_text += str(self.deck.cards[i]) + "     "
+        for idx, card_on_square_arr in enumerate(self.deck.cards_on_square):
+            displayed_text += str(card_on_square_arr[0]) + "     "
 
-            if i % 3 == 2:
+            if idx % 3 == 2:
                 print(f"{displayed_text}\n")
                 displayed_text = ""
 
@@ -69,6 +69,9 @@ class DeckController:
                 return True
 
         return False
+
+    def can_play(self):
+        return self.deck.current_card_idx < 52 - 1
 
     def guess(self) -> None:
         guess_input = input("Guess: ")
