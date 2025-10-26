@@ -42,17 +42,18 @@ class DeckController:
             self.deck.cards_on_square.append([self.deck.cards[i]])
 
         self.deck.card_on_top = self.deck.cards[9]
+        self.deck.current_card_idx = 9
 
     def display_cards(self) -> None:
         displayed_text = ""
 
-        square_cards_count = len(self.deck.cards_on_square)
+        square_cards_count = self.deck.current_card_idx
         cards_left = 52 - square_cards_count
 
         print(f"{square_cards_count} cards on the square")
         print(f"{cards_left} left in the deck\n")
 
-        for i in range(9):
+        for i in range(square_cards_count):
             displayed_text += str(self.deck.cards[i]) + "     "
 
             if i % 3 == 2:
@@ -80,17 +81,29 @@ class DeckController:
 
         top_card_value = CARD_VALUES_MAP[self.deck.card_on_top.value]
 
-        for card_on_square in self.deck.cards_on_square:
+        for idx, card_on_square in enumerate(self.deck.cards_on_square):
             if CARD_VALUES_MAP[card_on_square[0].value] == card_value:
                 if top_card_value == card_value:
+                    # TODO: Uncovering piles mechanism
                     print("You won! New pile unlocked!")
-                if top_card_value > card_value and self.config.key_higher == key:
+
+                elif top_card_value > card_value and self.config.key_higher == key:
+                    self.deck.cards_on_square[idx].insert(0, self.deck.card_on_top)
                     print("You won!")
+
                 elif top_card_value < card_value and self.config.key_lower == key:
+                    self.deck.cards_on_square[idx].insert(0, self.deck.card_on_top)
                     print("You won!")
+
                 else:
+                    # TODO: Make the pile closed
+
+                    # self.deck.cards_on_square[idx].insert(0, self.deck.card_on_top)
                     print("You lost!")
 
                 print(f"The card was {self.deck.card_on_top}")
 
                 break
+
+        self.deck.current_card_idx += 1
+        self.deck.card_on_top = self.deck.cards[self.deck.current_card_idx]
