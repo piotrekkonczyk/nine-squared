@@ -1,25 +1,7 @@
-# from controllers.deck_controller import DeckController
 from models.card import Card
 
 
 class Deck:
     cards: list[Card]
-    # deck_controller: DeckController
-
     cards_on_square: list[Card]
-
-    # def __init__(self) -> None:
-    #     self.deck_controller = DeckController()
-    #
-    #     self.seed_cards()
-    #     self.shuffle_cards()
-    #
-    # def seed_cards(self) -> None:
-    #     self.deck_controller.seed_cards()
-    #
-    # def shuffle_cards(self) -> None:
-    #     self.deck_controller.shuffle_cards()
-    #     self.cards_on_square = self.cards[0:9]
-    #
-    # def display_cards(self):
-    #     self.deck_controller.display_cards()
+    card_on_top: Card

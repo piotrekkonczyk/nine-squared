@@ -10,10 +10,9 @@ class DeckController:
 
     def create_deck(self) -> None:
         self.deck = Deck()
-        self.seed_cards()
-        self.shuffle_cards()
+        self.seed_deck()
 
-    def seed_cards(self) -> None:
+    def seed_deck(self) -> None:
         cards: list[Card] = []
         color_idx = 0
 
@@ -26,11 +25,11 @@ class DeckController:
             if i % 13 == 13 - 1:
                 color_idx += 1
 
-        self.deck.cards = cards
+        shuffle(cards)
 
-    def shuffle_cards(self) -> None:
-        shuffle(self.deck.cards)
+        self.deck.cards = cards
         self.deck.cards_on_square = self.deck.cards[0:9]
+        self.deck.card_on_top = self.deck.cards[9]
 
     def display_cards(self) -> None:
         displayed_text = ""
