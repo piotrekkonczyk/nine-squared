@@ -53,3 +53,27 @@ class DeckController:
             if i % 3 == 2:
                 print(f"{displayed_text}\n")
                 displayed_text = ""
+
+    def guess(self) -> None:
+        guess_input = input("Guess: ")
+        guess_elements = guess_input.split(" ")
+
+        # TODO: for now let's assume that the input is always correct
+
+        card_value = guess_elements[0]
+        key = guess_elements[1]
+
+        top_card_value = self.deck.card_on_top.value
+
+        for card_on_square in self.deck.cards_on_square:
+            if card_on_square.value == card_value:
+                if top_card_value > card_value and self.config.key_higher == key:
+                    print("You won!")
+                elif top_card_value < card_value and self.config.key_lower == key:
+                    print("You won!")
+                else:
+                    print("You lost!")
+
+                print(f"The card was {self.deck.card_on_top}")
+
+                break

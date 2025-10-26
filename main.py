@@ -7,3 +7,5 @@ deck_controller = DeckController(config=config)
 deck_controller.create_deck()
 
 deck_controller.display_cards()
+
+deck_controller.guess()
