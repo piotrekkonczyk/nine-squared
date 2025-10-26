@@ -35,7 +35,12 @@ class DeckController:
         shuffle(cards)
 
         self.deck.cards = cards
-        self.deck.cards_on_square = self.deck.cards[0:9]
+
+        # NOTE: Seeding cards on square as a two-dimensional array
+        self.deck.cards_on_square = []
+        for i in range(9):
+            self.deck.cards_on_square.append([self.deck.cards[i]])
+
         self.deck.card_on_top = self.deck.cards[9]
 
     def display_cards(self) -> None:
@@ -58,7 +63,7 @@ class DeckController:
         top_card_value = CARD_VALUES_MAP[self.deck.card_on_top.value]
 
         for card_on_square in self.deck.cards_on_square:
-            if CARD_VALUES_MAP[card_on_square.value] == top_card_value:
+            if CARD_VALUES_MAP[card_on_square[0].value] == top_card_value:
                 print("NOTE: card is on the table")
                 return True
 
@@ -76,7 +81,7 @@ class DeckController:
         top_card_value = CARD_VALUES_MAP[self.deck.card_on_top.value]
 
         for card_on_square in self.deck.cards_on_square:
-            if CARD_VALUES_MAP[card_on_square.value] == card_value:
+            if CARD_VALUES_MAP[card_on_square[0].value] == card_value:
                 if top_card_value == card_value:
                     print("You won! New pile unlocked!")
                 if top_card_value > card_value and self.config.key_higher == key:
