@@ -8,4 +8,5 @@ deck_controller.create_deck()
 
 deck_controller.display_cards()
 
+deck_controller.check_if_value_is_present()
 deck_controller.guess()

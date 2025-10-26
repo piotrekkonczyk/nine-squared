@@ -54,6 +54,16 @@ class DeckController:
                 print(f"{displayed_text}\n")
                 displayed_text = ""
 
+    def check_if_value_is_present(self):
+        top_card_value = CARD_VALUES_MAP[self.deck.card_on_top.value]
+
+        for card_on_square in self.deck.cards_on_square:
+            if CARD_VALUES_MAP[card_on_square.value] == top_card_value:
+                print("NOTE: card is on the table")
+                return True
+
+        return False
+
     def guess(self) -> None:
         guess_input = input("Guess: ")
         guess_elements = guess_input.split(" ")
@@ -67,6 +77,8 @@ class DeckController:
 
         for card_on_square in self.deck.cards_on_square:
             if CARD_VALUES_MAP[card_on_square.value] == card_value:
+                if top_card_value == card_value:
+                    print("You won! New pile unlocked!")
                 if top_card_value > card_value and self.config.key_higher == key:
                     print("You won!")
                 elif top_card_value < card_value and self.config.key_lower == key:
