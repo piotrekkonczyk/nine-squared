@@ -2,9 +2,18 @@ from constants.cards import CARD_COLORS, CARD_VALUES
 from models.card import Card
 from random import shuffle
 
+from models.deck import Deck
+
 
 class DeckController:
-    def seed_cards(self) -> list[Card]:
+    deck: Deck
+
+    def create_deck(self) -> None:
+        self.deck = Deck()
+        self.seed_cards()
+        self.shuffle_cards()
+
+    def seed_cards(self) -> None:
         cards: list[Card] = []
         color_idx = 0
 
@@ -17,23 +26,22 @@ class DeckController:
             if i % 13 == 13 - 1:
                 color_idx += 1
 
-        return cards
+        self.deck.cards = cards
 
-    def shuffle_cards(self, cards: list[Card]) -> list[Card]:
-        shuffle(cards)
+    def shuffle_cards(self) -> None:
+        shuffle(self.deck.cards)
+        self.deck.cards_on_square = self.deck.cards[0:9]
 
-        return cards
-
-    def display_cards(self, cards: list[Card], cards_on_square: list[Card]) -> None:
+    def display_cards(self) -> None:
         displayed_text = ""
-        square_cards_count = len(cards_on_square)
+        square_cards_count = len(self.deck.cards_on_square)
 
         print(f"{square_cards_count} cards on the square")
         print(f"{52 - square_cards_count} left in the deck")
         print("")
 
         for i in range(9):
-            displayed_text += str(cards[i]) + "     "
+            displayed_text += str(self.deck.cards[i]) + "     "
 
             if i % 3 == 2:
                 print(f"{displayed_text}")

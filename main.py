@@ -1,5 +1,7 @@
-from models.deck import Deck
+from controllers.deck_controller import DeckController
 
 
-deck = Deck()
-deck.display_cards()
+deck_controller = DeckController()
+deck_controller.create_deck()
+
+deck_controller.display_cards()
