@@ -33,21 +33,16 @@ class DeckController:
 
     def display_cards(self) -> None:
         displayed_text = ""
+
         square_cards_count = len(self.deck.cards_on_square)
+        cards_left = 52 - square_cards_count
 
         print(f"{square_cards_count} cards on the square")
-        print(f"{52 - square_cards_count} left in the deck")
-        print("")
+        print(f"{cards_left} left in the deck\n")
 
         for i in range(9):
             displayed_text += str(self.deck.cards[i]) + "     "
 
             if i % 3 == 2:
-                print(f"{displayed_text}")
-
-                if i == 8:
-                    return
-
-                print("\n")
-
+                print(f"{displayed_text}\n")
                 displayed_text = ""
