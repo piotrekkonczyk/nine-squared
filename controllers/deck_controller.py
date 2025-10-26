@@ -55,7 +55,7 @@ class DeckController:
         print(f"{cards_left} left in the deck\n")
 
         for idx, card_on_square_arr in enumerate(self.deck.cards_on_square):
-            if idx in self.deck.closed_piles_indices:
+            if self.is_pile_closed(idx):
                 displayed_text += "XX" + "     "
             else:
                 displayed_text += str(card_on_square_arr[0]) + "     "
@@ -67,8 +67,10 @@ class DeckController:
     def check_if_value_is_present(self):
         top_card_value = CARD_VALUES_MAP[self.deck.card_on_top.value]
 
-        for card_on_square in self.deck.cards_on_square:
-            if CARD_VALUES_MAP[card_on_square[0].value] == top_card_value:
+        for idx, card_on_square in enumerate(self.deck.cards_on_square):
+            if CARD_VALUES_MAP[
+                card_on_square[0].value
+            ] == top_card_value and not self.is_pile_closed(idx):
                 print("NOTE: card is on the table")
                 return True
 
@@ -89,7 +91,9 @@ class DeckController:
         top_card_value = CARD_VALUES_MAP[self.deck.card_on_top.value]
 
         for idx, card_on_square in enumerate(self.deck.cards_on_square):
-            if CARD_VALUES_MAP[card_on_square[0].value] == card_value:
+            if CARD_VALUES_MAP[
+                card_on_square[0].value
+            ] == card_value and not self.is_pile_closed(idx):
                 if top_card_value == card_value:
                     # TODO: Uncovering piles mechanism
                     print("You won! New pile unlocked!")
@@ -116,3 +120,6 @@ class DeckController:
 
     def close_pile(self, pile_idx: int):
         self.deck.closed_piles_indices.add(pile_idx)
+
+    def is_pile_closed(self, pile_idx: int) -> bool:
+        return pile_idx in self.deck.closed_piles_indices
