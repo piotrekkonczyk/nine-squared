@@ -17,6 +17,7 @@ class DeckController:
     def create_deck(self) -> None:
         self.deck = Deck()
         self.seed_deck()
+        self.deck.closed_piles_indices = set()
 
     def seed_deck(self) -> None:
         cards: list[Card] = []
@@ -54,7 +55,10 @@ class DeckController:
         print(f"{cards_left} left in the deck\n")
 
         for idx, card_on_square_arr in enumerate(self.deck.cards_on_square):
-            displayed_text += str(card_on_square_arr[0]) + "     "
+            if idx in self.deck.closed_piles_indices:
+                displayed_text += "XX" + "     "
+            else:
+                displayed_text += str(card_on_square_arr[0]) + "     "
 
             if idx % 3 == 2:
                 print(f"{displayed_text}\n")
@@ -99,9 +103,8 @@ class DeckController:
                     print("You won!")
 
                 else:
-                    # TODO: Make the pile closed
-
-                    # self.deck.cards_on_square[idx].insert(0, self.deck.card_on_top)
+                    self.deck.cards_on_square[idx].insert(0, self.deck.card_on_top)
+                    self.close_pile(idx)
                     print("You lost!")
 
                 print(f"The card was {self.deck.card_on_top}")
@@ -110,3 +113,6 @@ class DeckController:
 
         self.deck.current_card_idx += 1
         self.deck.card_on_top = self.deck.cards[self.deck.current_card_idx]
+
+    def close_pile(self, pile_idx: int):
+        self.deck.closed_piles_indices.add(pile_idx)

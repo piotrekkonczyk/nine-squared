@@ -6,4 +6,6 @@ class Deck:
     cards_on_square: list[list[Card]]
     card_on_top: Card
 
+    closed_piles_indices: set[int]
+
     current_card_idx: int
