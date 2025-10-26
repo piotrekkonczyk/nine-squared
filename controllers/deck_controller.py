@@ -51,8 +51,7 @@ class DeckController:
         square_cards_count = self.deck.current_card_idx
         cards_left = 52 - square_cards_count
 
-        print(f"\n{square_cards_count} cards on the square")
-        print(f"{cards_left} left in the deck\n")
+        print(f"\n{cards_left} left in the deck\n")
 
         for idx, card_on_square_arr in enumerate(self.deck.cards_on_square):
             if self.is_pile_closed(idx):
@@ -60,7 +59,8 @@ class DeckController:
             else:
                 displayed_text += str(card_on_square_arr[0]) + "     "
 
-            if idx % 3 == 2:
+            # INFO: Print once per three cards or after the last one
+            if (idx % 3 == 2) or (idx + 1 == len(self.deck.cards_on_square)):
                 print(f"{displayed_text}\n")
                 displayed_text = ""
 
@@ -97,6 +97,12 @@ class DeckController:
                 if top_card_value == card_value:
                     # TODO: Uncovering piles mechanism
                     print("You won! New pile unlocked!")
+
+                    if len(self.deck.closed_piles_indices) == 0:
+                        self.deck.cards_on_square.append([self.deck.card_on_top])
+                    else:
+                        # TODO: Mechanism to choose which pile to open
+                        pass
 
                 elif top_card_value > card_value and self.config.key_higher == key:
                     self.deck.cards_on_square[idx].insert(0, self.deck.card_on_top)
