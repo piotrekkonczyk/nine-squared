@@ -4,6 +4,7 @@ from models.card import Card
 from random import shuffle
 
 from models.deck import Deck
+from utils.cli_colors import error, success
 
 
 class DeckController:
@@ -119,7 +120,7 @@ class DeckController:
                 card_on_square[0].value
             ] == card_value and not self.is_pile_closed(idx):
                 if top_card_value == card_value:
-                    print("You won! New pile unlocked!")
+                    success("You won! New pile unlocked!")
 
                     if len(self.deck.closed_piles_indices) == 0:
                         self.deck.cards_on_square.append([self.deck.card_on_top])
@@ -128,16 +129,16 @@ class DeckController:
 
                 elif top_card_value > card_value and self.config.key_higher == key:
                     self.deck.cards_on_square[idx].insert(0, self.deck.card_on_top)
-                    print("You won!")
+                    success("You won!")
 
                 elif top_card_value < card_value and self.config.key_lower == key:
                     self.deck.cards_on_square[idx].insert(0, self.deck.card_on_top)
-                    print("You won!")
+                    success("You won!")
 
                 else:
                     self.deck.cards_on_square[idx].insert(0, self.deck.card_on_top)
                     self.close_pile(idx)
-                    print("You lost!")
+                    error("You lost!")
 
                 print(f"The card was {self.deck.card_on_top}")
 
@@ -147,7 +148,7 @@ class DeckController:
         self.deck.card_on_top = self.deck.cards[self.deck.current_card_idx]
 
     def game_lost(self):
-        print("You have lost. Try once again!")
+        error("You have lost. Try once again!")
 
     def game_won(self):
-        print("You won! Huge congrats")
+        success("You won! Huge congrats")

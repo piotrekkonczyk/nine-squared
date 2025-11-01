@@ -1,4 +1,4 @@
-from models.card_helpers import CardColor, CardValue
+from utils.card_helpers import CardColor, CardValue
 
 
 class Card:
