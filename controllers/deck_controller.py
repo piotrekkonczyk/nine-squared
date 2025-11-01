@@ -79,6 +79,22 @@ class DeckController:
     def can_play(self):
         return self.deck.current_card_idx < 52 - 1
 
+    def open_pile(self):
+        pile_to_open = int(
+            input(f"Open one of {self.deck.closed_piles_indices}-indexed piles: ")
+        )
+
+        for pile_idx in self.deck.closed_piles_indices:
+            if pile_idx == pile_to_open:
+                self.deck.closed_piles_indices.remove(pile_idx)
+                return
+
+    def close_pile(self, pile_idx: int):
+        self.deck.closed_piles_indices.add(pile_idx)
+
+    def is_pile_closed(self, pile_idx: int) -> bool:
+        return pile_idx in self.deck.closed_piles_indices
+
     def guess(self) -> None:
         guess_input = input("Guess: ")
         guess_elements = guess_input.split(" ")
@@ -95,14 +111,12 @@ class DeckController:
                 card_on_square[0].value
             ] == card_value and not self.is_pile_closed(idx):
                 if top_card_value == card_value:
-                    # TODO: Uncovering piles mechanism
                     print("You won! New pile unlocked!")
 
                     if len(self.deck.closed_piles_indices) == 0:
                         self.deck.cards_on_square.append([self.deck.card_on_top])
                     else:
-                        # TODO: Mechanism to choose which pile to open
-                        pass
+                        self.open_pile()
 
                 elif top_card_value > card_value and self.config.key_higher == key:
                     self.deck.cards_on_square[idx].insert(0, self.deck.card_on_top)
@@ -123,9 +137,3 @@ class DeckController:
 
         self.deck.current_card_idx += 1
         self.deck.card_on_top = self.deck.cards[self.deck.current_card_idx]
-
-    def close_pile(self, pile_idx: int):
-        self.deck.closed_piles_indices.add(pile_idx)
-
-    def is_pile_closed(self, pile_idx: int) -> bool:
-        return pile_idx in self.deck.closed_piles_indices
