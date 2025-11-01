@@ -1,4 +1,5 @@
 from utils.card_helpers import CardColor, CardValue
+from utils.cli_colors import red_color
 
 
 class Card:
@@ -14,9 +15,9 @@ class Card:
 
         match self.color:
             case "Hearts":
-                color = "\U00002764"
+                color = red_color("\U00002764")
             case "Diamonds":
-                color = "\U000025c6"
+                color = red_color("\U000025c6")
             case "Spades":
                 color = "\U00002660"
             case "Clubs":

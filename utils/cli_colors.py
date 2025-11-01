@@ -1,5 +1,4 @@
 from colorama import Fore, Style, init
-from models.card import Card
 
 
 def init_cli_colors():
@@ -14,11 +13,5 @@ def error(message: str):
     print(Fore.LIGHTRED_EX + message + Style.RESET_ALL)
 
 
-def print_colorized_card(card: Card):
-    color = ""
-    if card.color == "Spades" or card.color == "Clubs":
-        color = Fore.BLACK
-    else:
-        color = Fore.RED
-
-    print(color + str(card))
+def red_color(value: str):
+    return Fore.RED + value + Style.RESET_ALL
