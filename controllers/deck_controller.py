@@ -77,10 +77,12 @@ class DeckController:
         return False
 
     def can_play(self):
-        # NOTE: Not the most optimal solution though
         if len(self.deck.cards_on_square) == len(self.deck.closed_piles_indices):
-            # TODO: game lost state
-            # self.game_lost()
+            self.game_lost()
+            return False
+
+        if self.deck.current_card_idx == 52:
+            self.game_won()
             return False
 
         return self.deck.current_card_idx < 52 - 1
@@ -143,3 +145,9 @@ class DeckController:
 
         self.deck.current_card_idx += 1
         self.deck.card_on_top = self.deck.cards[self.deck.current_card_idx]
+
+    def game_lost(self):
+        print("You have lost. Try once again!")
+
+    def game_won(self):
+        print("You won! Huge congrats")
