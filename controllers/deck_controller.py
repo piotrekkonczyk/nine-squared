@@ -77,6 +77,12 @@ class DeckController:
         return False
 
     def can_play(self):
+        # NOTE: Not the most optimal solution though
+        if len(self.deck.cards_on_square) == len(self.deck.closed_piles_indices):
+            # TODO: game lost state
+            # self.game_lost()
+            return False
+
         return self.deck.current_card_idx < 52 - 1
 
     def open_pile(self):
