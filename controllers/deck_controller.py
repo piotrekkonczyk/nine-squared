@@ -3,6 +3,7 @@ from constants.cards_constants import CARD_COLORS, CARD_VALUES, CARD_VALUES_MAP
 from constants.deck_constants import (
     CARDS_IN_COLOR,
     CARDS_IN_DECK,
+    CARDS_IN_ROW_ON_SQUARE,
     CARDS_ON_SQUARE_BY_DEFAULT,
 )
 from models.card import Card
@@ -65,7 +66,10 @@ class DeckController:
                 displayed_text += str(card_on_square_arr[0]) + "     "
 
             # INFO: Print once per three cards or after the last one
-            if (idx % 3 == 2) or (idx + 1 == len(self.deck.cards_on_square)):
+            if (
+                idx % CARDS_IN_ROW_ON_SQUARE == CARDS_IN_ROW_ON_SQUARE - 1
+                or idx + 1 == len(self.deck.cards_on_square)
+            ):
                 print(f"{displayed_text}\n")
                 displayed_text = ""
 
@@ -95,9 +99,10 @@ class DeckController:
         return True
 
     def open_pile(self):
-        pile_to_open = int(
-            input(f"Open one of {self.deck.closed_piles_indices}-indexed piles: ")
-        )
+        # NOTE: Not displaying indices
+        sorted_indices = [idx + 1 for idx in sorted(self.deck.closed_piles_indices)]
+
+        pile_to_open = int(input(f"Open one of {sorted_indices} piles: "))
 
         for pile_idx in self.deck.closed_piles_indices:
             if pile_idx == pile_to_open:
