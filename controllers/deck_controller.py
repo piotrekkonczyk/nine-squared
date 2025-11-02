@@ -1,13 +1,7 @@
 from config.config import Config
-from constants.cards_constants import CARD_COLORS, CARD_VALUES, CARD_VALUES_MAP
-from constants.deck_constants import (
-    CARDS_IN_COLOR,
-    CARDS_IN_DECK,
-    CARDS_IN_ROW_ON_SQUARE,
-    CARDS_ON_SQUARE_BY_DEFAULT,
-)
-from models.card import Card
-from random import shuffle
+from constants.cards_constants import CARD_VALUES_MAP
+from constants.deck_constants import CARDS_IN_DECK, CARDS_IN_ROW_ON_SQUARE
+from controllers.deck_core_controller import DeckCoreController
 
 from models.deck import Deck
 from utils.cli_colors import error, success
@@ -16,41 +10,13 @@ from utils.cli_colors import error, success
 class DeckController:
     deck: Deck
     config: Config
+    deck_core_controller: DeckCoreController
 
     def __init__(self, config) -> None:
         self.config = config
+        self.deck_core_controller = DeckCoreController()
 
-    # NOTE: Behaves kinda like constructor
-    def create_deck(self) -> None:
-        self.deck = Deck()
-        self.seed_deck()
-        self.deck.closed_piles_indices = set()
-
-    def seed_deck(self) -> None:
-        cards: list[Card] = []
-        color_idx = 0
-
-        for i in range(CARDS_IN_DECK):
-            value_idx = i % CARDS_IN_COLOR
-
-            card = Card(value=CARD_VALUES[value_idx], color=CARD_COLORS[color_idx])
-            cards.append(card)
-
-            # NOTE: Checks whether the value_index means that the card is ACE, idx 12 means ACE
-            if value_idx == CARDS_IN_COLOR - 1:
-                color_idx += 1
-
-        shuffle(cards)
-
-        self.deck.cards = cards
-
-        # NOTE: Seeding cards on square as a two-dimensional array
-        self.deck.cards_on_square = []
-        for i in range(CARDS_ON_SQUARE_BY_DEFAULT):
-            self.deck.cards_on_square.append([self.deck.cards[i]])
-
-        self.deck.card_on_top = self.deck.cards[CARDS_ON_SQUARE_BY_DEFAULT]
-        self.deck.current_card_idx = CARDS_ON_SQUARE_BY_DEFAULT
+        self.deck = self.deck_core_controller.create_deck()
 
     def display_cards(self) -> None:
         text_in_current_row = ""
@@ -60,7 +26,7 @@ class DeckController:
         print(f"\n{cards_left} left in the deck\n")
 
         for idx, card_on_square_arr in enumerate(self.deck.cards_on_square):
-            if self.is_pile_closed(idx):
+            if self.is_pile_closed(pile_idx=idx):
                 text_in_current_row += "XX" + "     "
             else:
                 text_in_current_row += str(card_on_square_arr[0]) + "     "
@@ -86,8 +52,6 @@ class DeckController:
         return False
 
     def can_play(self):
-        print(self.deck.current_card_idx)
-
         if len(self.deck.cards_on_square) == len(self.deck.closed_piles_indices):
             self.game_lost()
             return False

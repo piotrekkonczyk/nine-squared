@@ -4,7 +4,6 @@ from controllers.deck_controller import DeckController
 config = Config()
 
 deck_controller = DeckController(config=config)
-deck_controller.create_deck()
 
 while deck_controller.can_play():
     deck_controller.display_cards()
