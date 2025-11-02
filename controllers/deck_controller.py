@@ -1,5 +1,10 @@
 from config.config import Config
-from constants.cards import CARD_COLORS, CARD_VALUES, CARD_VALUES_MAP
+from constants.cards_constants import CARD_COLORS, CARD_VALUES, CARD_VALUES_MAP
+from constants.deck_constants import (
+    CARDS_IN_COLOR,
+    CARDS_IN_DECK,
+    CARDS_ON_SQUARE_BY_DEFAULT,
+)
 from models.card import Card
 from random import shuffle
 
@@ -24,14 +29,14 @@ class DeckController:
         cards: list[Card] = []
         color_idx = 0
 
-        for i in range(52):
-            value_idx = i % 13
+        for i in range(CARDS_IN_DECK):
+            value_idx = i % CARDS_IN_COLOR
 
             card = Card(value=CARD_VALUES[value_idx], color=CARD_COLORS[color_idx])
             cards.append(card)
 
             # NOTE: Checks whether the value_index means that the card is ACE, idx 12 means ACE
-            if value_idx == 13 - 1:
+            if value_idx == CARDS_IN_COLOR - 1:
                 color_idx += 1
 
         shuffle(cards)
@@ -40,16 +45,16 @@ class DeckController:
 
         # NOTE: Seeding cards on square as a two-dimensional array
         self.deck.cards_on_square = []
-        for i in range(9):
+        for i in range(CARDS_ON_SQUARE_BY_DEFAULT):
             self.deck.cards_on_square.append([self.deck.cards[i]])
 
-        self.deck.card_on_top = self.deck.cards[9]
-        self.deck.current_card_idx = 9
+        self.deck.card_on_top = self.deck.cards[CARDS_ON_SQUARE_BY_DEFAULT]
+        self.deck.current_card_idx = CARDS_ON_SQUARE_BY_DEFAULT
 
     def display_cards(self) -> None:
         displayed_text = ""
 
-        cards_left = 52 - self.deck.current_card_idx
+        cards_left = CARDS_IN_DECK - self.deck.current_card_idx
 
         print(f"\n{cards_left} left in the deck\n")
 
@@ -83,7 +88,7 @@ class DeckController:
             self.game_lost()
             return False
 
-        if self.deck.current_card_idx == 52:
+        if self.deck.current_card_idx == CARDS_IN_DECK:
             self.game_won()
             return False
 
@@ -147,7 +152,7 @@ class DeckController:
 
         self.deck.current_card_idx += 1
 
-        if self.deck.current_card_idx == 52:
+        if self.deck.current_card_idx == CARDS_IN_DECK:
             return
 
         self.deck.card_on_top = self.deck.cards[self.deck.current_card_idx]
