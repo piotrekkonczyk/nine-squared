@@ -53,7 +53,7 @@ class DeckController:
         self.deck.current_card_idx = CARDS_ON_SQUARE_BY_DEFAULT
 
     def display_cards(self) -> None:
-        displayed_text = ""
+        text_in_current_row = ""
 
         cards_left = CARDS_IN_DECK - self.deck.current_card_idx
 
@@ -61,17 +61,17 @@ class DeckController:
 
         for idx, card_on_square_arr in enumerate(self.deck.cards_on_square):
             if self.is_pile_closed(idx):
-                displayed_text += "XX" + "     "
+                text_in_current_row += "XX" + "     "
             else:
-                displayed_text += str(card_on_square_arr[0]) + "     "
+                text_in_current_row += str(card_on_square_arr[0]) + "     "
 
             # INFO: Print once per three cards or after the last one
             if (
                 idx % CARDS_IN_ROW_ON_SQUARE == CARDS_IN_ROW_ON_SQUARE - 1
                 or idx + 1 == len(self.deck.cards_on_square)
             ):
-                print(f"{displayed_text}\n")
-                displayed_text = ""
+                print(f"{text_in_current_row}\n")
+                text_in_current_row = ""
 
     def check_if_value_is_present(self):
         top_card_value = CARD_VALUES_MAP[self.deck.card_on_top.value]
@@ -98,7 +98,12 @@ class DeckController:
 
         return True
 
-    def open_pile(self):
+    def open_pile(self, pile_idx: int | None = None) -> None:
+        if pile_idx:
+            self.deck.closed_piles_indices.remove(pile_idx)
+            print(f"Pile {pile_idx + 1} opened")
+            return
+
         # NOTE: Not displaying indices
         sorted_indices = [idx + 1 for idx in sorted(self.deck.closed_piles_indices)]
 
@@ -135,6 +140,8 @@ class DeckController:
 
                     if len(self.deck.closed_piles_indices) == 0:
                         self.deck.cards_on_square.append([self.deck.card_on_top])
+                    elif len(self.deck.closed_piles_indices) == 1:
+                        self.open_pile(idx)
                     else:
                         self.open_pile()
 
