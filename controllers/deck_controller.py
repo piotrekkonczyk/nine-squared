@@ -49,8 +49,7 @@ class DeckController:
     def display_cards(self) -> None:
         displayed_text = ""
 
-        square_cards_count = self.deck.current_card_idx
-        cards_left = 52 - square_cards_count
+        cards_left = 52 - self.deck.current_card_idx
 
         print(f"\n{cards_left} left in the deck\n")
 
@@ -78,6 +77,8 @@ class DeckController:
         return False
 
     def can_play(self):
+        print(self.deck.current_card_idx)
+
         if len(self.deck.cards_on_square) == len(self.deck.closed_piles_indices):
             self.game_lost()
             return False
@@ -86,7 +87,7 @@ class DeckController:
             self.game_won()
             return False
 
-        return self.deck.current_card_idx < 52 - 1
+        return True
 
     def open_pile(self):
         pile_to_open = int(
@@ -145,6 +146,10 @@ class DeckController:
                 break
 
         self.deck.current_card_idx += 1
+
+        if self.deck.current_card_idx == 52:
+            return
+
         self.deck.card_on_top = self.deck.cards[self.deck.current_card_idx]
 
     def game_lost(self):
