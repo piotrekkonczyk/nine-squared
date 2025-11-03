@@ -5,6 +5,10 @@ config = Config()
 
 game = Game(config=config)
 
+print(
+    "Separate card value and higher/lower decision with space. So your guess might look like `Q k`"
+)
+
 while not game.is_over():
     game.display_cards()
 

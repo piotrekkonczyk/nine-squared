@@ -5,6 +5,7 @@ from controllers.deck_controller import DeckController
 
 from models.deck import Deck
 from utils.cli_colors import error, success
+from utils.error_codes import INVALID_CARD_CHOICE
 
 
 class Game:
@@ -14,9 +15,9 @@ class Game:
 
     def __init__(self, config) -> None:
         self.config = config
-        self.deck_core_controller = DeckCoreController()
+        self.deck_controller = DeckController()
 
-        self.deck = self.deck_core_controller.create_deck()
+        self.deck = self.deck_controller.create_deck()
 
     def display_cards(self) -> None:
         text_in_current_row = ""
@@ -50,7 +51,7 @@ class Game:
 
         return False
 
-    def is_game_over(self) -> bool:
+    def is_over(self) -> bool:
         if len(self.deck.cards_on_square) == len(self.deck.closed_piles_indices):
             self.game_lost()
             return True
@@ -83,14 +84,25 @@ class Game:
     def is_pile_closed(self, pile_idx: int) -> bool:
         return pile_idx in self.deck.closed_piles_indices
 
+    def is_guess_valid(self, card_value: int, key: str) -> bool:
+        if card_value == INVALID_CARD_CHOICE:
+            error("Invalid card choice, try once again!")
+            return False
+
+        if key != self.config.key_higher and key != self.config.key_lower:
+            error(
+                f"Key is incorrect! Try `{self.config.key_higher}` for above, and `{self.config.key_lower}` for below."
+            )
+            return False
+
+        return True
+
     def guess(self) -> None:
-        guess_input = input("Guess: ")
-        guess_elements = guess_input.split(" ")
+        [user_card_value, key] = input("Guess: ").split(" ")
+        card_value = CARD_VALUES_MAP.get(user_card_value, INVALID_CARD_CHOICE)
 
-        # TODO: for now let's assume that the input is always correct
-
-        card_value = CARD_VALUES_MAP[guess_elements[0]]
-        key = guess_elements[1]
+        if not self.is_guess_valid(card_value=card_value, key=key):
+            return
 
         top_card_value = CARD_VALUES_MAP[self.deck.card_on_top.value]
 
