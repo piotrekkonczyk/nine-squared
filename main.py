@@ -1,16 +1,22 @@
 from config.config import Config
 from controllers.game_controller import Game
 
-config = Config()
 
-game = Game(config=config)
+def main():
+    config = Config()
 
-print(
-    "Separate card value and higher/lower decision with space. So your guess might look like `Q k`"
-)
+    game = Game(config=config)
 
-while not game.is_over():
-    game.display_cards()
+    print(
+        "Separate card value and higher/lower decision with space. So your guess might look like `Q k`"
+    )
 
-    game.check_if_value_is_present()
-    game.guess()
+    while not game.is_over():
+        game.display_cards()
+
+        game.check_if_value_is_present()
+        game.guess()
+
+
+if __name__ == "__main__":
+    main()
