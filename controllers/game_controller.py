@@ -62,13 +62,14 @@ class Game:
 
         return False
 
-    def open_pile(self, pile_idx: int | None = None) -> None:
-        if pile_idx:
-            self.deck.closed_piles_indices.remove(pile_idx)
-            print(f"Pile {pile_idx + 1} opened")
-            return
+    def open_pile(self) -> bool:
+        if len(self.deck.closed_piles_indices) == 1:
+            self.deck.closed_piles_indices.clear()
+            success("All piles are opened now!")
 
-        # NOTE: Not displaying indices
+            return True
+
+        # NOTE: Displaying numbers instead of indices
         sorted_indices = [idx + 1 for idx in sorted(self.deck.closed_piles_indices)]
 
         pile_to_open = int(input(f"Open one of {sorted_indices} piles: "))
@@ -76,7 +77,11 @@ class Game:
         for pile_idx in self.deck.closed_piles_indices:
             if pile_idx + 1 == pile_to_open:
                 self.deck.closed_piles_indices.remove(pile_idx)
-                return
+                return True
+
+        # INFO: Unsuccessful, has not found the pile idx to open
+        error("Incorrect pile! Try once again!")
+        return False
 
     def close_pile(self, pile_idx: int):
         self.deck.closed_piles_indices.add(pile_idx)
@@ -117,10 +122,11 @@ class Game:
 
                     if len(self.deck.closed_piles_indices) == 0:
                         self.deck.cards_on_square.append([self.deck.card_on_top])
-                    elif len(self.deck.closed_piles_indices) == 1:
-                        self.open_pile(idx)
+                        success(f"Unlocked {len(self.deck.cards_on_square)} pile!")
                     else:
-                        self.open_pile()
+                        has_opened_successfully = self.open_pile()
+                        while not has_opened_successfully:
+                            has_opened_successfully = self.open_pile()
 
                 # NOTE: Guessed correctly
                 elif (
@@ -143,7 +149,7 @@ class Game:
                 break
 
         if not has_found_card:
-            print(
+            error(
                 f"Guess incorrect: No `{user_card_value}` on the square. Try once again!"
             )
             return

@@ -10,6 +10,7 @@ print(
 )
 
 while not game.is_over():
+    print(game.deck.card_on_top)
     game.display_cards()
 
     game.check_if_value_is_present()
