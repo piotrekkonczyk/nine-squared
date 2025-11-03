@@ -94,9 +94,9 @@ class Game:
             error("Invalid card choice, try once again!")
             return False
 
-        if key != self.config.key_higher and key != self.config.key_lower:
+        if key != self.config.key_above and key != self.config.key_below:
             error(
-                f"Key is incorrect! Try `{self.config.key_higher}` for above, and `{self.config.key_lower}` for below."
+                f"Key is incorrect! Try `{self.config.key_above}` for above, and `{self.config.key_below}` for below."
             )
             return False
 
@@ -131,9 +131,9 @@ class Game:
                 # NOTE: Guessed correctly
                 elif (
                     top_card_value > card_value
-                    and self.config.key_higher == key
+                    and self.config.key_above == key
                     or top_card_value < card_value
-                    and self.config.key_lower == key
+                    and self.config.key_below == key
                 ):
                     self.deck.cards_on_square[idx].insert(0, self.deck.card_on_top)
                     success("You won!")
