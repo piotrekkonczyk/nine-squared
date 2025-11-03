@@ -105,6 +105,7 @@ class Game:
             return
 
         top_card_value = CARD_VALUES_MAP[self.deck.card_on_top.value]
+        has_found_card = False
 
         for idx, card_on_square in enumerate(self.deck.cards_on_square):
             if CARD_VALUES_MAP[
@@ -138,7 +139,14 @@ class Game:
                     error("You lost!")
 
                 print(f"The card was {self.deck.card_on_top}")
+                has_found_card = True
                 break
+
+        if not has_found_card:
+            print(
+                f"Guess incorrect: No `{user_card_value}` on the square. Try once again!"
+            )
+            return
 
         self.deck.current_card_idx += 1
 
