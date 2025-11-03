@@ -1,13 +1,12 @@
 from config.config import Config
-from controllers.deck_controller import DeckController
+from controllers.game_controller import Game
 
 config = Config()
 
-deck_controller = DeckController(config=config)
-deck_controller.create_deck()
+game = Game(config=config)
 
-while deck_controller.can_play():
-    deck_controller.display_cards()
+while not game.is_over():
+    game.display_cards()
 
-    deck_controller.check_if_value_is_present()
-    deck_controller.guess()
+    game.check_if_value_is_present()
+    game.guess()
