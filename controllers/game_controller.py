@@ -5,6 +5,7 @@ from controllers.deck_controller import DeckController
 
 from models.deck import Deck
 from utils.cli_colors import error, success
+from utils.error_codes import INVALID_CARD_CHOICE
 
 
 class Game:
@@ -14,9 +15,9 @@ class Game:
 
     def __init__(self, config) -> None:
         self.config = config
-        self.deck_core_controller = DeckCoreController()
+        self.deck_controller = DeckController()
 
-        self.deck = self.deck_core_controller.create_deck()
+        self.deck = self.deck_controller.create_deck()
 
     def display_cards(self) -> None:
         text_in_current_row = ""
@@ -50,7 +51,7 @@ class Game:
 
         return False
 
-    def is_game_over(self) -> bool:
+    def is_over(self) -> bool:
         if len(self.deck.cards_on_square) == len(self.deck.closed_piles_indices):
             self.game_lost()
             return True
@@ -61,13 +62,14 @@ class Game:
 
         return False
 
-    def open_pile(self, pile_idx: int | None = None) -> None:
-        if pile_idx:
-            self.deck.closed_piles_indices.remove(pile_idx)
-            print(f"Pile {pile_idx + 1} opened")
-            return
+    def open_pile(self) -> bool:
+        if len(self.deck.closed_piles_indices) == 1:
+            self.deck.closed_piles_indices.clear()
+            success("All piles are opened now!")
 
-        # NOTE: Not displaying indices
+            return True
+
+        # NOTE: Displaying numbers instead of indices
         sorted_indices = [idx + 1 for idx in sorted(self.deck.closed_piles_indices)]
 
         pile_to_open = int(input(f"Open one of {sorted_indices} piles: "))
@@ -75,7 +77,11 @@ class Game:
         for pile_idx in self.deck.closed_piles_indices:
             if pile_idx + 1 == pile_to_open:
                 self.deck.closed_piles_indices.remove(pile_idx)
-                return
+                return True
+
+        # INFO: Unsuccessful, has not found the pile idx to open
+        error("Incorrect pile! Try once again!")
+        return False
 
     def close_pile(self, pile_idx: int):
         self.deck.closed_piles_indices.add(pile_idx)
@@ -83,16 +89,28 @@ class Game:
     def is_pile_closed(self, pile_idx: int) -> bool:
         return pile_idx in self.deck.closed_piles_indices
 
+    def is_guess_valid(self, card_value: int, key: str) -> bool:
+        if card_value == INVALID_CARD_CHOICE:
+            error("Invalid card choice, try once again!")
+            return False
+
+        if key != self.config.key_above and key != self.config.key_below:
+            error(
+                f"Key is incorrect! Try `{self.config.key_above}` for above, and `{self.config.key_below}` for below."
+            )
+            return False
+
+        return True
+
     def guess(self) -> None:
-        guess_input = input("Guess: ")
-        guess_elements = guess_input.split(" ")
+        [user_card_value, key] = input("Guess: ").split(" ")
+        card_value = CARD_VALUES_MAP.get(user_card_value, INVALID_CARD_CHOICE)
 
-        # TODO: for now let's assume that the input is always correct
-
-        card_value = CARD_VALUES_MAP[guess_elements[0]]
-        key = guess_elements[1]
+        if not self.is_guess_valid(card_value=card_value, key=key):
+            return
 
         top_card_value = CARD_VALUES_MAP[self.deck.card_on_top.value]
+        has_found_card = False
 
         for idx, card_on_square in enumerate(self.deck.cards_on_square):
             if CARD_VALUES_MAP[
@@ -104,17 +122,18 @@ class Game:
 
                     if len(self.deck.closed_piles_indices) == 0:
                         self.deck.cards_on_square.append([self.deck.card_on_top])
-                    elif len(self.deck.closed_piles_indices) == 1:
-                        self.open_pile(idx)
+                        success(f"Unlocked {len(self.deck.cards_on_square)} pile!")
                     else:
-                        self.open_pile()
+                        has_opened_successfully = self.open_pile()
+                        while not has_opened_successfully:
+                            has_opened_successfully = self.open_pile()
 
                 # NOTE: Guessed correctly
                 elif (
                     top_card_value > card_value
-                    and self.config.key_higher == key
+                    and self.config.key_above == key
                     or top_card_value < card_value
-                    and self.config.key_lower == key
+                    and self.config.key_below == key
                 ):
                     self.deck.cards_on_square[idx].insert(0, self.deck.card_on_top)
                     success("You won!")
@@ -126,7 +145,14 @@ class Game:
                     error("You lost!")
 
                 print(f"The card was {self.deck.card_on_top}")
+                has_found_card = True
                 break
+
+        if not has_found_card:
+            error(
+                f"Guess incorrect: No `{user_card_value}` on the square. Try once again!"
+            )
+            return
 
         self.deck.current_card_idx += 1
 
