@@ -105,7 +105,7 @@ XX     2 ♠     2 ❤
 
 As you see, the pile with 10 was closed with J on top.
 
-> [!DANGER]
+> [!CAUTION]
 > Incorrect guess closes the pile. Play carefully!
 
 So, the goal is simple: **to survive to the end with at least one pile open**.
